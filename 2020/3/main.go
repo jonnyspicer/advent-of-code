@@ -4,7 +4,7 @@ import "fmt"
 
 func main() {
 	fmt.Printf("Day Three, Part One: %v\n", dayThree(input, 3, 1))
-	fmt.Printf("Day Three, Part One: %v\n",
+	fmt.Printf("Day Three, Part Two: %v\n",
 		dayThree(input, 1, 1) *
 			dayThree(input, 3, 1) *
 			dayThree(input, 5, 1) *
