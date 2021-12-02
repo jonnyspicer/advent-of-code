@@ -10,9 +10,9 @@ import (
 
 func main() {
 	// will clean this up to just take an day number
-	rows := parseTxt("day/one.txt")
-	fmt.Printf("Part one: %v\n", day.One(stringToIntSlice(rows), 1))
-	fmt.Printf("Part two: %v\n", day.One(stringToIntSlice(rows), 3))
+	rows := parseTxt("day/two.txt")
+	fmt.Printf("Part one: %v\n", day.Two(rows, day.A))
+	fmt.Printf("Part two: %v\n", day.Two(rows, day.B))
 }
 
 func parseTxt(path string) []string {
