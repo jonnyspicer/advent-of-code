@@ -9,7 +9,6 @@ func Two(input []string, navigate func(x, y, z *int, direction string, distance 
 	x, y, z := 0, 0, 0
 
 	for _, move := range input {
-		move = strings.TrimSuffix(move, "\r")
 		directions := strings.Split(move, " ")
 		distance, _ := strconv.Atoi(directions[1])
 		navigate(&x, &y, &z, directions[0], distance)
