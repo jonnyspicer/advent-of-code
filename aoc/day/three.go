@@ -1,7 +1,6 @@
 package day
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -36,105 +35,21 @@ func Three(input []string) (int64, int64) {
 		}
 	}
 
-	g, err := strconv.ParseInt(string(gamma), 2, 64)
-	if err != nil {
-		fmt.Println(err)
-	}
-	e, err := strconv.ParseInt(string(epsilon), 2, 64)
-	if err != nil {
-		fmt.Println(err)
-	}
+	g, _ := strconv.ParseInt(string(gamma), 2, 64)
+	e, _ := strconv.ParseInt(string(epsilon), 2, 64)
 
 	// part two
 
-	// maps to store which the indexes of the numbers we're still interested in
-	oxygenNumbers := map[int]bool{}
-	co2Numbers := map[int]bool{}
-	for k := 0; k < len(input); k++ {
-		oxygenNumbers[k] = true
-		co2Numbers[k] = true
-	}
+	oxygenNumbers := lastRemainingString(input, length, oxygen)
+	co2Numbers := lastRemainingString(input, length, carbon)
 
-	// for every bit, starting from left
-	for l := 0; l < length; l++ {
-		count := 0
-		mcb := mostCommonBit(oxygenNumbers, input, l)
-		// for every binary number in the input
-		for n, in := range input {
-			// if it's currently true and the bit is either the most common OR a 1 when there is no mcb
-			if (
-				(rune(in[l]) == '1' && mcb > 0) ||
-					(rune(in[l]) == '0' && mcb < 0) ||
-					(rune(in[l]) == '1' && mcb == 0)) &&
-				oxygenNumbers[n] == true {
-				oxygenNumbers[n] = true
-			} else {
-				// we're no longer interested in this number
-				oxygenNumbers[n] = false
-			}
-		}
+	oxygenString := ratingFromMap(oxygenNumbers, input)
+	carbonString := ratingFromMap(co2Numbers, input)
 
-		// loop over our map again to see if we only have one number left
-		for _, oxyNum := range oxygenNumbers {
-			if oxyNum == true {
-				count++
-			}
-		}
+	o, _ := strconv.ParseInt(oxygenString[0:length], 2, 64)
+	c, _ := strconv.ParseInt(carbonString[0:length], 2, 64)
 
-		if count == 1 {
-			break
-		}
-	}
-
-	for l := 0; l < length; l++ {
-		count := 0
-		mcb := mostCommonBit(co2Numbers, input, l)
-		for n, in := range input {
-			if (
-				(rune(in[l]) == '1' && mcb < 0) ||
-					(rune(in[l]) == '0' && mcb > 0) ||
-					(rune(in[l]) == '0' && mcb == 0)) &&
-				co2Numbers[n] == true {
-				co2Numbers[n] = true
-			} else {
-				co2Numbers[n] = false
-			}
-		}
-		for _, co2Num := range co2Numbers {
-			if co2Num == true {
-				count++
-			}
-		}
-
-		if count == 1 {
-			break
-		}
-	}
-
-	var gstr, estr string
-
-	for orating, oval := range oxygenNumbers {
-		if oval {
-			gstr = input[orating]
-		}
-	}
-
-	for crating, cval := range co2Numbers {
-		if cval {
-			estr = input[crating]
-		}
-	}
-
-	g2, err := strconv.ParseInt(gstr[0:length], 2, 64)
-	if err != nil {
-		fmt.Println(err)
-	}
-	e2, err := strconv.ParseInt(estr[0:length], 2, 64)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return g * e, g2 * e2
+	return g * e, o * c
 }
 // returns 0 if there is no mcb, a positive value if the mcb is 1 and a negative value if the mcb is 0
 func mostCommonBit(m map[int]bool, input []string, position int) int {
@@ -151,4 +66,56 @@ func mostCommonBit(m map[int]bool, input []string, position int) int {
 	}
 
 	return count
+}
+
+func oxygen(r rune, mcb int) bool {
+	return (r == '1' && mcb > 0) || (r == '0' && mcb < 0 ) || r == '1' && mcb == 0
+}
+
+func carbon(r rune, mcb int) bool {
+	return (r == '1' && mcb < 0) || (r == '0' && mcb > 0 ) || r == '0' && mcb == 0
+}
+
+// will return a map with only a single value of true, where the corresponding key is the index
+// in the input slice that we're interested in
+func lastRemainingString(input []string, length int, eval func(r rune, mcb int) bool) map[int]bool {
+	m := map[int]bool{}
+	for k := 0; k < len(input); k++ {
+		m[k] = true
+	}
+
+	for l := 0; l < length; l++ {
+		count := 0
+		mcb := mostCommonBit(m, input, l)
+		// for every binary number in the input
+		for n, in := range input {
+			// if our evaluation is false or if the value in the map is already false
+			if !eval(rune(in[l]), mcb) || !m[n] {
+				m[n] = false
+			}
+		}
+
+		// loop over our map again to see if we only have one number left
+		for _, val := range m {
+			if val {
+				count++
+			}
+		}
+
+		if count == 1 {
+			break
+		}
+	}
+
+	return m
+}
+
+func ratingFromMap(m map[int]bool, input []string) string {
+	for k, v := range m {
+		if v {
+			return input[k]
+		}
+	}
+
+	return ""
 }
