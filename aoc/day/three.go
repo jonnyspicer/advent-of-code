@@ -47,6 +47,7 @@ func Three(input []string) (int64, int64) {
 
 	// part two
 
+	// maps to store which the indexes of the numbers we're still interested in
 	oxygenNumbers := map[int]bool{}
 	co2Numbers := map[int]bool{}
 	for k := 0; k < len(input); k++ {
@@ -72,6 +73,8 @@ func Three(input []string) (int64, int64) {
 				oxygenNumbers[n] = false
 			}
 		}
+
+		// loop over our map again to see if we only have one number left
 		for _, oxyNum := range oxygenNumbers {
 			if oxyNum == true {
 				count++
