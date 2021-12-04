@@ -79,6 +79,8 @@ func carbon(r rune, mcb int) bool {
 // will return a map with only a single value of true, where the corresponding key is the index
 // in the input slice that we're interested in
 func lastRemainingString(input []string, length int, eval func(r rune, mcb int) bool) map[int]bool {
+	// first create a map of all the indexes where every value is true
+	// seeing as we want to start with all the binary numbers
 	m := map[int]bool{}
 	for k := 0; k < len(input); k++ {
 		m[k] = true
