@@ -40,7 +40,7 @@ func five(vls []ventLine, diagonals bool) int {
 
 	for _, x := range grid {
 		for _, y := range x {
-			if y > 1 {count++}
+			if y > 1 { count++ }
 		}
 	}
 

@@ -10,8 +10,8 @@ import (
 
 func main() {
 	// will clean this up to just take an day number
-	rows := parseTxt("day/five.txt")
-	a, b := day.Five(rows)
+	rows := parseTxt("day/six.txt")
+	a, b := day.Six(rows)
 	fmt.Printf("Part one: %v\n", a)
 	fmt.Printf("Part two: %v\n", b)
 }
