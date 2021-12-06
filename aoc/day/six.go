@@ -2,13 +2,12 @@ package day
 
 import (
 	"aoc/utils"
-	"fmt"
 )
 
 func Six(input []string) (int, int) {
-	days := utils.ExtractInts(input[0])
+	initialFish := utils.ExtractInts(input[0])
 
-	return fishPop(days, 80), fishPop(days, 256)
+	return fishPop(initialFish, 80), fishPop(initialFish, 256)
 }
 
 func fishPop(in []int, days int) int {
@@ -29,7 +28,6 @@ func fishPop(in []int, days int) int {
 	}
 
 	for i := 0; i < days; i++ {
-		fmt.Println(i)
 		t0, t1, t2, t3, t4, t5, t6, t7, t8 := lf[0], lf[1], lf[2], lf[3], lf[4], lf[5], lf[6], lf[7], lf[8]
 		lf[8] = t0
 		lf[7] = t8
