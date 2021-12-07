@@ -1,7 +1,7 @@
 package day
 
 import (
-	"encoding/json"
+	"aoc/utils"
 	"strconv"
 	"strings"
 )
@@ -66,9 +66,7 @@ func (b *bingo) numberOfTurnsToWin(nums string) {
 	// if winner, mark last number
 	// calculate everything else
 
-	fakeJson := "[" + nums + "]"
-	var moves []int
-	_ = json.Unmarshal([]byte(fakeJson), &moves)
+	moves := utils.ExtractInts(nums)
 
 	// for every move
 	for i := 0; i < len(moves); i++ {
