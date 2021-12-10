@@ -1,7 +1,7 @@
 package main
 
 import (
-	"aoc/day/09"
+	"aoc/day/10"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -9,8 +9,8 @@ import (
 
 func main() {
 	// will clean this up to just take an day number
-	rows := parseTxt("day/09/nine.txt")
-	a, b := day.Nine(rows)
+	rows := parseTxt("day/10/ten.txt")
+	a, b := day.Ten(rows)
 	fmt.Printf("Part one: %v\n", a)
 	fmt.Printf("Part two: %v\n", b)
 }
