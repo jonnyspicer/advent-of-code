@@ -1,17 +1,26 @@
 package day
 
 import (
-	"fmt"
 	"math"
 	"strings"
 )
 
+type coord struct {
+	x, y int
+}
+
+type node struct {
+	edges []coord
+	weight int
+}
+
+// This takes 45 mins to run on my machine... :(
 func Fifteen(input []string) (int, int) {
 	grid := map[coord]node{}
 
+	// Pretty sure this data structure is the problem,
+	// looping over it to find the smallest val is slow and gross
 	dist := map[coord]int{}
-
-	// can I use a pointer instead? or just iterate over the map?
 	queue := map[coord]struct{}{}
 	visited := map[coord]struct{}{}
 
@@ -31,37 +40,30 @@ func Fifteen(input []string) (int, int) {
 
 					grid[c] = newNode(c, coord{len(strings.TrimSpace(input[0])) * 5, len(input) * 5}, weight)
 					queue[c] = struct{}{}
-					dist[c] = math.MaxInt32
 				}
 			}
 		}
 	}
 
-	for y := 0; y < len(input) * 5; y++ {
-		fmt.Printf("\n")
-		for x := 0; x < len(strings.TrimSpace(input[0])) * 5; x++ {
-			fmt.Printf("%v" ,grid[coord{x, y}].weight)
-		}
-	}
-
+	// set initial node to top left
 	dist[coord{0,0}] = 0
 
 	for len(queue) > 0 {
 		v := getSmallestDist(dist, visited)
 		delete(queue, v)
-		fmt.Println(len(queue))
 		visited[v] = struct{}{}
 
 		for _, u := range grid[v].edges {
-			if dist[v] + grid[u].weight < dist[u] {
+			if _, ok := dist[u]; !ok || dist[v] + grid[u].weight < dist[u] {
 				dist[u] = dist[v] + grid[u].weight
 			}
 		}
 	}
 
-	return dist[coord{len(strings.TrimSpace(input[0])) * 5 - 1, len(input) *5 - 1}],0
+	return dist[coord{len(strings.TrimSpace(input[0])) - 1, len(input) - 1}],dist[coord{len(strings.TrimSpace(input[0])) * 5 - 1, len(input) *5 - 1}]
 }
 
+// this is the problem... takes ~11ms per call when dist gets large
 func getSmallestDist(dist map[coord]int, visited map[coord]struct{}) coord {
 	smallestDist := math.MaxInt32
 	var smallestCoord coord
@@ -76,15 +78,6 @@ func getSmallestDist(dist map[coord]int, visited map[coord]struct{}) coord {
 	}
 
 	return smallestCoord
-}
-
-type coord struct {
-	x, y int
-}
-
-type node struct {
-	edges []coord
-	weight int
 }
 
 func newNode(c, max coord, weight int) node {
