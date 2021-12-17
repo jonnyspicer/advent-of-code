@@ -35,10 +35,11 @@ func Seventeen(input []string) (int, int) {
 
 	availableCoords := map[coord]struct{}{}
 
-	for x := 0; x < ta.xUp; x++ {
+	for x := 0; x <= ta.xUp; x++ {
 		// the 10000 upper bound is arbitrary and gross
-		for y := ta.yLow; y < 10000; y++ {
-			maxForY := 0
+		for y := ta.yLow; y <= 10000; y++ {
+			maxForY, b := 0, false
+
 			p := probe {
 				position: coord{0,0},
 				xVel: x,
@@ -46,24 +47,28 @@ func Seventeen(input []string) (int, int) {
 				maxHeight: 0,
 			}
 
-			b := false
-
 			for !p.passedTargetArea(ta) {
 				if p.inTargetArea(ta) {
 					if _, ok := availableCoords[coord{x, y}]; !ok {
 						availableCoords[coord{x, y}] = struct{}{}
 					}
+
 					if maxForY <= p.maxHeight {
 						maxForY = p.maxHeight
 					} else {
+						// if we're not going any higher than before, break
 						b = true
 					}
 				}
+
 				p.step()
+
+				// if we've stopped making horizontal progress towards the target area, break
 				if p.xVel == 0 && p.position.x < ta.xLow { b = true; break }
 			}
 
 			if b { break }
+
 			if maxHeight < maxForY {
 				maxHeight = maxForY
 			}
